@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import uebung.uebungspringgemischt.entity.Course;
 import uebung.uebungspringgemischt.entity.Grade;
 import uebung.uebungspringgemischt.entity.Student;
-import uebung.uebungspringgemischt.persistence.MockData;
+ import uebung.uebungspringgemischt.persistence.JSONFileHandler;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 public class RootController {
 
     @Autowired
-    private MockData mockData;
+    private JSONFileHandler jsonFileHandler;
 
     @GetMapping("/student")
     public Student getStudent(@RequestParam(value = "id") int studentId) {
-        return mockData.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0);
+        return jsonFileHandler.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0);
     }
 
     @GetMapping("/courses")
@@ -26,7 +26,7 @@ public class RootController {
             @RequestParam(value = "student") int studentId,
             @RequestParam(value = "semester") int semester
     ) {
-        return mockData.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
+        return jsonFileHandler.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
                 .getCourses().stream().filter(c -> c.getSemester() == semester).collect(Collectors.toSet());
     }
 
@@ -36,9 +36,11 @@ public class RootController {
             @RequestParam(value = "course") int courseId,
             @RequestBody Integer grade
     ) {
-        Course course = mockData.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
+        Set<Student> students = jsonFileHandler.getStudents();
+        Course course = students.stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
                 .getCourses().stream().filter(c -> c.getId() == courseId).collect(Collectors.toList()).get(0);
         course.addGrade(new Grade(grade));
+        jsonFileHandler.saveStudents(students);
         return course;
     }
 }
