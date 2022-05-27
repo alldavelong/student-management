@@ -17,6 +17,8 @@ public class Course {
         this.grades = grades;
     }
 
+    public Course() {}
+
     public int getId() {
         return id;
     }

@@ -14,6 +14,10 @@ public class Student extends Person {
         this.courses = courses;
     }
 
+    public Student() {
+        super();
+    }
+
     public String getMatriculationNumber() {
         return matriculationNumber;
     }

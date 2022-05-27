@@ -7,6 +7,8 @@ public class Grade {
         this.grade = grade;
     }
 
+    public Grade() {}
+
     public int getGrade() {
         return grade;
     }
