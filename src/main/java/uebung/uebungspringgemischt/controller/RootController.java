@@ -20,6 +20,11 @@ public class RootController {
     @Autowired
     private StudentJsonDataService studentJsonDataService;
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     @GetMapping("/students")
     public String getStudents(Model uiModel) {
         uiModel.addAttribute("students", studentJsonDataService.getStudents());

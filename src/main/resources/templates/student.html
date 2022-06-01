@@ -5,6 +5,7 @@
     <title th:text="'Student ' + ${student.id}"></title>
 </head>
 <body>
+    <form th:action="@{/logout}" method="post"><input type="submit" value="Ausloggen"></form>
     <h1>Student</h1>
     <div>
         <p>Name: <span th:text="${student.fullName}"></span></p>
