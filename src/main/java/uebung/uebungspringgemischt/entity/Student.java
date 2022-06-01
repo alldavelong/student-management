@@ -1,13 +1,13 @@
 package uebung.uebungspringgemischt.entity;
 
-import java.util.Set;
+import java.util.List;
 
 public class Student extends Person {
     private String matriculationNumber; // PKZ
     private String year; // Jahrgang
-    private Set<Course> courses;
+    private List<Course> courses;
 
-    public Student(int id, String firstName, String lastName, String matriculationNumber, String year, Set<Course> courses) {
+    public Student(int id, String firstName, String lastName, String matriculationNumber, String year, List<Course> courses) {
         super(id, firstName, lastName);
         this.matriculationNumber = matriculationNumber;
         this.year = year;
@@ -34,11 +34,11 @@ public class Student extends Person {
         this.year = year;
     }
 
-    public Set<Course> getCourses() {
+    public List<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(Set<Course> courses) {
+    public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
 }
