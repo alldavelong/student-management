@@ -36,27 +36,34 @@ public class RootController {
     @GetMapping("/courses")
     public String getCourses(
             @RequestParam(value = "student") int studentId,
-            @RequestParam(value = "semester") int semester,
+            @RequestParam(value = "semester") int semesterId,
             Model uiModel
     ) {
-        List<Course> courses = studentJsonDataService.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
-                .getCourses().stream().filter(c -> c.getSemester() == semester).collect(Collectors.toList());
+        Student student = studentJsonDataService.getStudents().stream().filter(s -> s.getId() == studentId)
+                .collect(Collectors.toList()).get(0);
+        List<Course> courses = student
+                .getSemesters().stream().filter(s -> s.getId() == semesterId)
+                .collect(Collectors.toList()).get(0)
+                .getCourses();
         uiModel.addAttribute("courses", courses);
-        uiModel.addAttribute("studentId", studentId);
+        uiModel.addAttribute("student", student);
+        uiModel.addAttribute("semesterId", semesterId);
         return "courses";
     }
 
     @PostMapping("/grade")
     public RedirectView setGrade(
             @RequestParam(value = "student") int studentId,
+            @RequestParam(value = "semester") int semesterId,
             @RequestParam(value = "course") int courseId,
             @RequestParam(value = "grade") Integer grade
     ) {
         Set<Student> students = studentJsonDataService.getStudents();
         Course course = students.stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
+                .getSemesters().stream().filter(s -> s.getId() == semesterId).collect(Collectors.toList()).get(0)
                 .getCourses().stream().filter(c -> c.getId() == courseId).collect(Collectors.toList()).get(0);
         course.addGrade(new Grade(grade));
         studentJsonDataService.saveStudents(students);
-        return new RedirectView("/student?id=" + studentId);
+        return new RedirectView("/courses?student=" + studentId + "&semester=" + semesterId);
     }
 }

@@ -5,35 +5,18 @@
     <title th:text="'Student ' + ${student.id}"></title>
 </head>
 <body>
-    <h1>Student <span th:text="${student.id}"></span></h1>
+    <h1>Student</h1>
     <div>
-        <p>Name: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>
+        <p>Name: <span th:text="${student.fullName}"></span></p>
         <p>PKZ: <span th:text="${student.matriculationNumber}"></span></p>
-        <p>Jahrgang: <span th:text="${student.year}"></span></p>
+        <p>Jahrgang: <span th:text="${student.startYear}"></span></p>
     </div>
 
-    <h2>Kurse</h2>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Semester</th>
-            <th>Lektor</th>
-            <th>Noten</th>
-        </tr>
-        <tr th:each="course: ${student.courses}">
-            <td th:text="${course.name}"></td>
-            <td th:text="${course.semester}"></td>
-            <td th:text="${course.lecturer.firstName} + ' ' + ${course.lecturer.lastName}"></td>
-            <td th:text="${course.grades}"></td>
-            <td>
-                <form action="/grade" method="post">
-                    <input type="hidden" name="student" th:value="${student.id}">
-                    <input type="hidden" name="course" th:value="${course.id}">
-                    <input type="number" name="grade" required>
-                    <input type="submit" value="send">
-                </form>
-            </td>
-        </tr>
-    </table>
+    <h2>Kurse nach Semester</h2>
+    <ul>
+        <li th:each="semester: ${student.semesters}">
+            <a th:href="@{/courses(student=${student.id}, semester=${semester.id})}" th:text="${semester.id} + '. Semester'"></a>
+        </li>
+    </ul>
 </body>
 </html>

@@ -2,26 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Kurse</title>
+    <title th:text="'Kurse ' + ${semesterId} + '. Semester'"></title>
 </head>
 <body>
 
-  <h2>Kurse</h2>
+  <h2 th:text="'Kurse ' + ${semesterId} + '. Semester'"></h2>
+  <p th:text="'Student: ' + ${student.fullName}"></p>
   <table>
     <tr>
       <th>Name</th>
-      <th>Semester</th>
       <th>Lektor</th>
       <th>Noten</th>
     </tr>
     <tr th:each="course: ${courses}">
       <td th:text="${course.name}"></td>
-      <td th:text="${course.semester}"></td>
-      <td th:text="${course.lecturer.firstName} + ' ' + ${course.lecturer.lastName}"></td>
+      <td th:text="${course.lecturer.fullName}"></td>
       <td th:text="${course.grades}"></td>
       <td>
         <form action="/grade" method="post">
-          <input type="hidden" name="student" th:value="${studentId}">
+          <input type="hidden" name="student" th:value="${student.id}">
+          <input type="hidden" name="semester" th:value="${semesterId}">
           <input type="hidden" name="course" th:value="${course.id}">
           <input type="number" name="grade" required>
           <input type="submit" value="send">

@@ -4,14 +4,13 @@ import java.util.List;
 
 public class Student extends Person {
     private String matriculationNumber; // PKZ
-    private String year; // Jahrgang
-    private List<Course> courses;
+    private String startYear; // Jahrgang
+    private List<Semester> semesters;
 
-    public Student(int id, String firstName, String lastName, String matriculationNumber, String year, List<Course> courses) {
+    public Student(int id, String firstName, String lastName, String matriculationNumber, String startYear) {
         super(id, firstName, lastName);
         this.matriculationNumber = matriculationNumber;
-        this.year = year;
-        this.courses = courses;
+        this.startYear = startYear;
     }
 
     public Student() {
@@ -26,19 +25,20 @@ public class Student extends Person {
         this.matriculationNumber = matriculationNumber;
     }
 
-    public String getYear() {
-        return year;
+    public String getStartYear() {
+        return startYear;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setStartYear(String startYear) {
+        this.startYear = startYear;
     }
 
-    public List<Course> getCourses() {
-        return courses;
+    public List<Semester> getSemesters() {
+        return semesters;
     }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
+    public void setSemesters(List<Semester> semesters) {
+        this.semesters = semesters;
     }
+
 }
