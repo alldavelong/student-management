@@ -20,6 +20,12 @@ public class RootController {
     @Autowired
     private StudentJsonDataService studentJsonDataService;
 
+    @GetMapping("/students")
+    public String getStudents(Model uiModel) {
+        uiModel.addAttribute("students", studentJsonDataService.getStudents());
+        return "students";
+    }
+
     @GetMapping("/student")
     public String getStudent(@RequestParam(value = "id") int studentId, Model uiModel) {
         Student student = studentJsonDataService.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0);

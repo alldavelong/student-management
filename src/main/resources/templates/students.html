@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Students</title>
+</head>
+<body>
+    <h1>Alle Studenten</h1>
+    <ul>
+        <li th:each="student: ${students}">
+            <a th:href="@{/student(id=${student.id})}">
+                <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span>
+            </a>
+        </li>
+    </ul>
+</body>
+</html>
