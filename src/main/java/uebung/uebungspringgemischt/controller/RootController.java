@@ -8,7 +8,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import uebung.uebungspringgemischt.entity.Course;
 import uebung.uebungspringgemischt.entity.Grade;
 import uebung.uebungspringgemischt.entity.Student;
- import uebung.uebungspringgemischt.persistence.JSONFileHandler;
+ import uebung.uebungspringgemischt.persistence.StudentJsonDataService;
 
 import java.util.List;
 import java.util.Set;
@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 public class RootController {
 
     @Autowired
-    private JSONFileHandler jsonFileHandler;
+    private StudentJsonDataService studentJsonDataService;
 
     @GetMapping("/student")
     public String getStudent(@RequestParam(value = "id") int studentId, Model uiModel) {
-        Student student = jsonFileHandler.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0);
+        Student student = studentJsonDataService.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0);
         uiModel.addAttribute("student",student);
         return "student";
     }
@@ -33,7 +33,7 @@ public class RootController {
             @RequestParam(value = "semester") int semester,
             Model uiModel
     ) {
-        List<Course> courses = jsonFileHandler.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
+        List<Course> courses = studentJsonDataService.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
                 .getCourses().stream().filter(c -> c.getSemester() == semester).collect(Collectors.toList());
         uiModel.addAttribute("courses", courses);
         uiModel.addAttribute("studentId", studentId);
@@ -46,11 +46,11 @@ public class RootController {
             @RequestParam(value = "course") int courseId,
             @RequestParam(value = "grade") Integer grade
     ) {
-        Set<Student> students = jsonFileHandler.getStudents();
+        Set<Student> students = studentJsonDataService.getStudents();
         Course course = students.stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
                 .getCourses().stream().filter(c -> c.getId() == courseId).collect(Collectors.toList()).get(0);
         course.addGrade(new Grade(grade));
-        jsonFileHandler.saveStudents(students);
+        studentJsonDataService.saveStudents(students);
         return new RedirectView("/student?id=" + studentId);
     }
 }

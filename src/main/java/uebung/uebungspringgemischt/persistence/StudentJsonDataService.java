@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Service
-public class JSONFileHandler {
+public class StudentJsonDataService {
     private final File STUDENTS_FILE = new File("students.json");
 
     public void saveStudents(Set<Student> students) {
