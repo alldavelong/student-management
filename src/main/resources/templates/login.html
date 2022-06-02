@@ -17,10 +17,10 @@
 
   <form th:action="@{/login}" method="post">
     <label for="user">PKZ</label>
-    <input type="text" id="user" name="username">
+    <input type="text" id="user" name="username" autocomplete="username">
     <br>
     <label for="pass">Passwort</label>
-    <input type="password" id="pass" name="password">
+    <input type="password" id="pass" name="password" autocomplete="current-password">
     <br>
     <input type="submit" value="Einloggen">
   </form>
