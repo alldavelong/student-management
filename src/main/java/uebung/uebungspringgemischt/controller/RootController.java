@@ -25,7 +25,7 @@ public class RootController {
         return "login";
     }
 
-    @GetMapping("/students")
+    @GetMapping(value = {"/", "/students"})
     public String getStudents(Model uiModel) {
         uiModel.addAttribute("students", studentJsonDataService.getStudents());
         return "students";

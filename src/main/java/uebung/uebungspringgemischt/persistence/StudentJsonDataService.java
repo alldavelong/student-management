@@ -31,4 +31,15 @@ public class StudentJsonDataService {
         }
         return null;
     }
+
+    public Student getStudentByMatriculationNumber(String matriculationNumber) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Set<Student> students = objectMapper.readValue(STUDENTS_FILE, new TypeReference<>() {});
+            return students.stream().filter(s -> s.getMatriculationNumber().equals(matriculationNumber)).findFirst().get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
