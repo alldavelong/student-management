@@ -8,6 +8,7 @@
 
   <h2 th:text="'Kurse ' + ${semesterId} + '. Semester'"></h2>
   <p th:text="'Student: ' + ${student.fullName}"></p>
+  <p th:if="${maxGradesError}"><span th:text="${maxGradesError}" style="color:red"></span></p>
   <table>
     <tr>
       <th>Name</th>

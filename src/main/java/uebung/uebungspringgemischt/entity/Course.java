@@ -1,5 +1,7 @@
 package uebung.uebungspringgemischt.entity;
 
+import uebung.uebungspringgemischt.controller.TooManyGradesException;
+
 import java.util.List;
 
 public class Course {
@@ -7,6 +9,7 @@ public class Course {
     private String name;
     private Lecturer lecturer;
     private List<Grade> grades;
+    private static final int MAX_GRADES = 3;
 
     public Course(int id, String name, Lecturer lecturer, List<Grade> grades) {
         this.id = id;
@@ -53,7 +56,10 @@ public class Course {
         return !this.grades.isEmpty();
     }
 
-    public void addGrade(Grade grade) {
+    public void addGrade(Grade grade) throws TooManyGradesException {
+        if (this.grades.size() >= MAX_GRADES) {
+            throw new TooManyGradesException();
+        }
         this.grades.add(grade);
     }
 }

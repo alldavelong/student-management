@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import uebung.uebungspringgemischt.entity.Course;
 import uebung.uebungspringgemischt.entity.Grade;
@@ -61,14 +62,20 @@ public class RootController {
             @RequestParam(value = "semester") int semesterId,
             @RequestParam(value = "course") int courseId,
             @RequestParam(value = "grade") Integer grade,
-            @AuthenticationPrincipal UserDetails user
+            @AuthenticationPrincipal UserDetails user,
+            RedirectAttributes redirectAttributes
     ) {
         int studentId = studentJsonDataService.getStudentByMatriculationNumber(user.getUsername()).getId();
         Set<Student> students = studentJsonDataService.getStudents();
         Course course = students.stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
                 .getSemesters().stream().filter(s -> s.getId() == semesterId).collect(Collectors.toList()).get(0)
                 .getCourses().stream().filter(c -> c.getId() == courseId).collect(Collectors.toList()).get(0);
-        course.addGrade(new Grade(grade));
+        try {
+            course.addGrade(new Grade(grade));
+        } catch (TooManyGradesException e) {
+            redirectAttributes.addFlashAttribute("maxGradesError",
+                    "Hinzufügen nicht möglich. " + e.getMessage());
+        }
         studentJsonDataService.saveStudents(students);
         return new RedirectView("/courses?student=" + studentId + "&semester=" + semesterId);
     }
