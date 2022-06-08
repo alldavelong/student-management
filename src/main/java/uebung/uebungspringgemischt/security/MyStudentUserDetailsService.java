@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import uebung.uebungspringgemischt.entity.Student;
 import uebung.uebungspringgemischt.persistence.StudentJsonDataService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +22,14 @@ public class MyStudentUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        if (username.equals("admin")) {
+            return new org.springframework.security.core.userdetails.User(
+                    username,
+                    "{bcrypt}" + new BCryptPasswordEncoder().encode("admin"),
+                    new ArrayList<>(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")))
+                    );
+        }
+
         Student user = studentJsonDataService.getStudentByMatriculationNumber(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);

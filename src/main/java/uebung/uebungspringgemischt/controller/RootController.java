@@ -27,6 +27,12 @@ public class RootController {
         return "login";
     }
 
+    @GetMapping("/admin")
+    public String getStudents(Model uiModel) {
+        uiModel.addAttribute("students", studentJsonDataService.getStudents());
+        return "students";
+    }
+
     @GetMapping("/me")
     public String getStudent(Model uiModel, @AuthenticationPrincipal UserDetails user) {
         uiModel.addAttribute("student",studentJsonDataService.getStudentByMatriculationNumber(user.getUsername()));
