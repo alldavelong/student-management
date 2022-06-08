@@ -19,7 +19,7 @@
       <td th:text="${course.lecturer.fullName}"></td>
       <td th:text="${course.grades}"></td>
       <td>
-        <form action="/grade" method="post">
+        <form th:action="@{/grade}" method="post">
           <input type="hidden" name="student" th:value="${student.id}">
           <input type="hidden" name="semester" th:value="${semesterId}">
           <input type="hidden" name="course" th:value="${course.id}">
