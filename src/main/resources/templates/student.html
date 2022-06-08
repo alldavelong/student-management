@@ -16,7 +16,7 @@
     <h2>Kurse nach Semester</h2>
     <ul>
         <li th:each="semester: ${student.semesters}">
-            <a th:href="@{/courses(student=${student.id}, semester=${semester.id})}" th:text="${semester.id} + '. Semester'"></a>
+            <a th:href="@{/courses(semester=${semester.id})}" th:text="${semester.id} + '. Semester'"></a>
         </li>
     </ul>
 </body>

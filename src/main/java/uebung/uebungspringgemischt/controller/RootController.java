@@ -1,6 +1,8 @@
 package uebung.uebungspringgemischt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,32 +22,24 @@ public class RootController {
     @Autowired
     private StudentJsonDataService studentJsonDataService;
 
-    @GetMapping("/login")
+    @GetMapping(value = {"/", "/login"})
     public String login() {
         return "login";
     }
 
-    @GetMapping(value = {"/", "/students"})
-    public String getStudents(Model uiModel) {
-        uiModel.addAttribute("students", studentJsonDataService.getStudents());
-        return "students";
-    }
-
-    @GetMapping("/student")
-    public String getStudent(@RequestParam(value = "id") int studentId, Model uiModel) {
-        Student student = studentJsonDataService.getStudents().stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0);
-        uiModel.addAttribute("student",student);
+    @GetMapping("/me")
+    public String getStudent(Model uiModel, @AuthenticationPrincipal UserDetails user) {
+        uiModel.addAttribute("student",studentJsonDataService.getStudentByMatriculationNumber(user.getUsername()));
         return "student";
     }
 
     @GetMapping("/courses")
     public String getCourses(
-            @RequestParam(value = "student") int studentId,
             @RequestParam(value = "semester") int semesterId,
-            Model uiModel
+            Model uiModel,
+            @AuthenticationPrincipal UserDetails user
     ) {
-        Student student = studentJsonDataService.getStudents().stream().filter(s -> s.getId() == studentId)
-                .collect(Collectors.toList()).get(0);
+        Student student = studentJsonDataService.getStudentByMatriculationNumber(user.getUsername());
         List<Course> courses = student
                 .getSemesters().stream().filter(s -> s.getId() == semesterId)
                 .collect(Collectors.toList()).get(0)
@@ -58,11 +52,12 @@ public class RootController {
 
     @PostMapping("/grade")
     public RedirectView setGrade(
-            @RequestParam(value = "student") int studentId,
             @RequestParam(value = "semester") int semesterId,
             @RequestParam(value = "course") int courseId,
-            @RequestParam(value = "grade") Integer grade
+            @RequestParam(value = "grade") Integer grade,
+            @AuthenticationPrincipal UserDetails user
     ) {
+        int studentId = studentJsonDataService.getStudentByMatriculationNumber(user.getUsername()).getId();
         Set<Student> students = studentJsonDataService.getStudents();
         Course course = students.stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
                 .getSemesters().stream().filter(s -> s.getId() == semesterId).collect(Collectors.toList()).get(0)

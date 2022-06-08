@@ -1,4 +1,4 @@
-package uebung.uebungspringgemischt;
+package uebung.uebungspringgemischt.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .formLogin()
                     .loginPage("/login")
+                    .defaultSuccessUrl("/me")
                     .permitAll()
                     .and()
                 .logout()
