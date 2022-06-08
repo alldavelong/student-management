@@ -1,5 +1,7 @@
 package uebung.uebungspringgemischt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public abstract class Person {
     private int id;
     private String firstName;
@@ -37,6 +39,7 @@ public abstract class Person {
         this.lastName = lastName;
     }
 
+    @JsonIgnore
     public String getFullName() {
         return firstName + ' ' + lastName;
     }
