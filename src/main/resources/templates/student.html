@@ -5,13 +5,11 @@
     <title th:text="'Student ' + ${student.id}"></title>
 </head>
 <body>
-    <form th:action="@{/logout}" method="post"><input type="submit" value="Ausloggen"></form>
+
+    <div th:insert="fragments/logout.html :: logout"></div>
+
     <h1>Student</h1>
-    <div>
-        <p>Name: <span th:text="${student.fullName}"></span></p>
-        <p>PKZ: <span th:text="${student.matriculationNumber}"></span></p>
-        <p>Jahrgang: <span th:text="${student.startYear}"></span></p>
-    </div>
+    <div th:insert="fragments/student-info.html :: student-info"></div>
 
     <h2>Kurse nach Semester</h2>
     <ul>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <table th:fragment="courses-table(courses)">
+        <tr>
+            <th>Name</th>
+            <th>Lektor</th>
+            <th>Noten</th>
+        </tr>
+        <tr th:each="course: ${courses}">
+            <td th:text="${course.name}"></td>
+            <td th:text="${course.lecturer.fullName}"></td>
+            <td th:text="${course.grades}"></td>
+            <td>
+                <form th:action="@{/grade}" method="post">
+                    <input type="hidden" name="semester" th:value="${semesterId}">
+                    <input type="hidden" name="course" th:value="${course.id}">
+                    <input type="number" name="grade" required>
+                    <input type="submit" value="speichern">
+                </form>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

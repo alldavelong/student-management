@@ -6,28 +6,15 @@
 </head>
 <body>
 
-  <h2 th:text="'Kurse ' + ${semesterId} + '. Semester'"></h2>
-  <p th:text="'Student: ' + ${student.fullName}"></p>
-  <p th:if="${maxGradesError}"><span th:text="${maxGradesError}" style="color:red"></span></p>
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Lektor</th>
-      <th>Noten</th>
-    </tr>
-    <tr th:each="course: ${courses}">
-      <td th:text="${course.name}"></td>
-      <td th:text="${course.lecturer.fullName}"></td>
-      <td th:text="${course.grades}"></td>
-      <td>
-        <form th:action="@{/grade}" method="post">
-          <input type="hidden" name="semester" th:value="${semesterId}">
-          <input type="hidden" name="course" th:value="${course.id}">
-          <input type="number" name="grade" required>
-          <input type="submit" value="speichern">
-        </form>
-      </td>
-    </tr>
-  </table>
+    <div th:insert="fragments/logout.html :: logout"></div>
+
+    <h2 th:text="'Kurse ' + ${semesterId} + '. Semester'"></h2>
+
+    <p th:text="'Student: ' + ${student.fullName}"></p>
+
+    <p th:if="${maxGradesError}"><span th:text="${maxGradesError}" style="color:red"></span></p>
+
+    <div th:insert="fragments/courses-table.html :: courses-table(${courses})"></div>
+
 </body>
 </html>

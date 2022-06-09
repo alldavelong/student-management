@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <div th:fragment="student-info">
+        <p>Name: <span th:text="${student.fullName}"></span></p>
+        <p>PKZ: <span th:text="${student.matriculationNumber}"></span></p>
+        <p>Jahrgang: <span th:text="${student.startYear}"></span></p>
+    </div>
+
+</body>
+</html>

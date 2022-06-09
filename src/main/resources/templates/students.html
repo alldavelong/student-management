@@ -6,46 +6,24 @@
 </head>
 <body>
 
-    <form th:action="@{/logout}" method="post"><input type="submit" value="Ausloggen"></form>
+    <div th:insert="fragments/logout.html :: logout"></div>
 
     <h1>Admin - alle Studenten</h1>
 
     <div th:each="student: ${students}">
 
         <h2 th:text="'Student ' + ${student.id}"></h2>
-        <div>
-            <p>Name: <span th:text="${student.fullName}"></span></p>
-            <p>PKZ: <span th:text="${student.matriculationNumber}"></span></p>
-            <p>Jahrgang: <span th:text="${student.startYear}"></span></p>
-        </div>
+
+        <div th:insert="fragments/student-info.html :: student-info"></div>
 
         <div th:each="semester: ${student.semesters}">
             <h3 th:text="'Kurse ' + ${semester.id} + '. Semester'"></h3>
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Lektor</th>
-                    <th>Noten</th>
-                </tr>
-                <tr th:each="course: ${semester.courses}">
-                    <td th:text="${course.name}"></td>
-                    <td th:text="${course.lecturer.fullName}"></td>
-                    <td th:text="${course.grades}"></td>
-                    <td>
-                        <form th:action="@{/grade}" method="post">
-                            <input type="hidden" name="semester" th:value="${semesterId}">
-                            <input type="hidden" name="course" th:value="${course.id}">
-                            <input type="number" name="grade" required>
-                            <input type="submit" value="speichern">
-                        </form>
-                    </td>
-                </tr>
-            </table>
+
+            <div th:insert="fragments/courses-table.html :: courses-table(${semester.courses})"></div>
+
         </div>
 
-
-
-
     </div>
+
 </body>
 </html>
