@@ -9,7 +9,7 @@ public class Course {
     private String name;
     private Lecturer lecturer;
     private List<Grade> grades;
-    private static final int MAX_GRADES = 3;
+    public static final int MAX_GRADES = 3;
 
     public Course(int id, String name, Lecturer lecturer, List<Grade> grades) {
         this.id = id;

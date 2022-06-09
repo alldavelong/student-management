@@ -72,8 +72,8 @@ public class RootController {
                 .getCourses().stream().filter(c -> c.getId() == courseId).collect(Collectors.toList()).get(0);
         try {
             course.addGrade(new Grade(grade));
-        } catch (TooManyGradesException e) {
-            redirectAttributes.addFlashAttribute("maxGradesError",
+        } catch (TooManyGradesException | GradeOutOfRangeException e) {
+            redirectAttributes.addFlashAttribute("gradeAddingError",
                     "Hinzufügen nicht möglich. " + e.getMessage());
         }
         studentJsonDataService.saveStudents(students);
