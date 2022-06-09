@@ -11,7 +11,7 @@
         <tr th:each="course: ${courses}">
             <td th:text="${course.name}"></td>
             <td th:text="${course.lecturer.fullName}"></td>
-            <td th:text="${course.grades}"></td>
+            <td th:text="${#strings.listJoin(course.grades.![grade], ', ')}"></td> <!-- ! bedeutet 'projection' -->
             <td>
                 <form th:action="@{/grade}" method="post">
                     <input type="hidden" name="semester" th:value="${semesterId}">
