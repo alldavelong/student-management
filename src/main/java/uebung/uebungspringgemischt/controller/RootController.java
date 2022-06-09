@@ -10,9 +10,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import uebung.uebungspringgemischt.entity.Course;
 import uebung.uebungspringgemischt.entity.Grade;
+import uebung.uebungspringgemischt.entity.Person;
 import uebung.uebungspringgemischt.entity.Student;
  import uebung.uebungspringgemischt.persistence.StudentJsonDataService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +32,10 @@ public class RootController {
 
     @GetMapping("/admin")
     public String getStudents(Model uiModel) {
-        uiModel.addAttribute("students", studentJsonDataService.getStudents());
+        uiModel.addAttribute(
+                "students", studentJsonDataService.getStudents()
+                .stream().sorted(Comparator.comparingInt(Person::getId)).collect(Collectors.toList())
+        );
         return "students";
     }
 
@@ -59,17 +64,26 @@ public class RootController {
 
     @PostMapping("/grade")
     public RedirectView setGrade(
+            @RequestParam(value = "student") int studentId,
             @RequestParam(value = "semester") int semesterId,
             @RequestParam(value = "course") int courseId,
             @RequestParam(value = "grade") Integer grade,
             @AuthenticationPrincipal UserDetails user,
             RedirectAttributes redirectAttributes
     ) {
-        int studentId = studentJsonDataService.getStudentByMatriculationNumber(user.getUsername()).getId();
+        boolean isAdmin = user.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"));
+
         Set<Student> students = studentJsonDataService.getStudents();
-        Course course = students.stream().filter(s -> s.getId() == studentId).collect(Collectors.toList()).get(0)
+
+        if (!isAdmin) {
+            studentId = studentJsonDataService.getStudentByMatriculationNumber(user.getUsername()).getId();
+        }
+
+        int finalStudentId = studentId;
+        Course course = students.stream().filter(s -> s.getId() == finalStudentId).collect(Collectors.toList()).get(0)
                 .getSemesters().stream().filter(s -> s.getId() == semesterId).collect(Collectors.toList()).get(0)
                 .getCourses().stream().filter(c -> c.getId() == courseId).collect(Collectors.toList()).get(0);
+
         try {
             course.addGrade(new Grade(grade));
         } catch (TooManyGradesException | GradeOutOfRangeException e) {
@@ -77,6 +91,11 @@ public class RootController {
                     "Hinzufügen nicht möglich. " + e.getMessage());
         }
         studentJsonDataService.saveStudents(students);
-        return new RedirectView("/courses?student=" + studentId + "&semester=" + semesterId);
+
+        if (isAdmin) {
+            return new RedirectView("/admin");
+        }
+
+        return new RedirectView("/courses?student=" + finalStudentId + "&semester=" + semesterId);
     }
 }

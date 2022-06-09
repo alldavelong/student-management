@@ -19,7 +19,7 @@
         <div th:each="semester: ${student.semesters}">
             <h3 th:text="'Kurse ' + ${semester.id} + '. Semester'"></h3>
 
-            <div th:insert="fragments/courses-table.html :: courses-table(${semester.courses})"></div>
+            <div th:insert="fragments/courses-table.html :: courses-table(${semester.courses}, ${semester.id})"></div>
 
         </div>
 

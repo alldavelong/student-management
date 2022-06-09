@@ -14,7 +14,7 @@
 
     <p th:if="${gradeAddingError}"><span th:text="${gradeAddingError}" style="color:red"></span></p>
 
-    <div th:insert="fragments/courses-table.html :: courses-table(${courses})"></div>
+    <div th:insert="fragments/courses-table.html :: courses-table(${courses}, ${semesterId})"></div>
 
 </body>
 </html>
