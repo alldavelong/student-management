@@ -6,10 +6,10 @@
 </head>
 <body>
 
-    <div th:insert="fragments/logout.html :: logout"></div>
+    <th:block th:insert="fragments/logout.html :: logout"/>
 
     <h1>Student</h1>
-    <div th:insert="fragments/student-info.html :: student-info"></div>
+    <th:block th:insert="fragments/student-info.html :: student-info"/>
 
     <h2>Kurse nach Semester</h2>
     <ul>
