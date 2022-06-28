@@ -12,7 +12,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/students").permitAll()
+                    .antMatchers("/", "/students", "/h2-console/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -22,5 +22,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .logout()
                     .permitAll();
+
+        http.csrf().disable(); // FIXME not for production
+        http.headers().frameOptions().disable(); // FIXME not for production
     }
 }
