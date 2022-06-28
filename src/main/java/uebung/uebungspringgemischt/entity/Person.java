@@ -2,9 +2,18 @@ package uebung.uebungspringgemischt.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Person {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "person_id")
     private int id;
+    @Column(name = "f_name")
     private String firstName;
+    @Column(name = "l_name")
     private String lastName;
 
     public Person(int id, String firstName, String lastName) {
