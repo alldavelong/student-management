@@ -2,10 +2,18 @@ package uebung.uebungspringgemischt.entity;
 
 import uebung.uebungspringgemischt.controller.GradeOutOfRangeException;
 
+import javax.persistence.*;
+
+@Entity
 public class Grade {
-    private int grade;
     public static final int LOWEST_GRADE = 1;
     public static final int HIGHEST_GRADE = 5;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int grade;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     public Grade(int grade) throws GradeOutOfRangeException {
         setGrade(grade);
@@ -22,5 +30,13 @@ public class Grade {
             throw new GradeOutOfRangeException();
         }
         this.grade = grade;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

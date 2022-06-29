@@ -1,23 +1,34 @@
 package uebung.uebungspringgemischt.entity;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
+@Entity
 public class Student extends Person {
-    private String matriculationNumber; // PKZ
-    private String password;
-    private Set<String> authorities;
-    private String startYear; // Jahrgang
-    private List<Semester> semesters;
 
-    public Student(int id, String firstName, String lastName, String matriculationNumber,
-                   String password, Set<String> authorities, String startYear) {
-        super(id, firstName, lastName);
-        this.matriculationNumber = matriculationNumber;
-        this.password = password;
-        this.authorities = authorities;
-        this.startYear = startYear;
-    }
+    @Column(name = "matriculation_number")
+    private String matriculationNumber; // PKZ
+
+    private String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_authority",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
+    private Set<Authority> authorities;
+
+    private String startYear; // Jahrgang
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_semester",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "semester_id")
+    )
+    private List<Semester> semesters;
 
     public Student() {
         super();
@@ -39,11 +50,11 @@ public class Student extends Person {
         this.password = password;
     }
 
-    public Set<String> getAuthorities() {
+    public Set<Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<String> authorities) {
+    public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
 

@@ -1,15 +1,19 @@
 package uebung.uebungspringgemischt.entity;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Semester {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @OneToMany(mappedBy = "semester") // TODO: soll eigentlich im Dreieck als student_semester_course stehen
     private List<Course> courses;
 
-    public Semester(int id, List<Course> courses) {
-        this.id = id;
-        this.courses = courses;
-    }
+    @ManyToMany(mappedBy = "semesters")
+    private List<Student> students;
 
     public Semester() {
     }
@@ -28,5 +32,13 @@ public class Semester {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }

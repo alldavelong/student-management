@@ -2,21 +2,25 @@ package uebung.uebungspringgemischt.entity;
 
 import uebung.uebungspringgemischt.controller.TooManyGradesException;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Course {
-    private int id;
-    private String name;
-    private Lecturer lecturer;
-    private List<Grade> grades;
     public static final int MAX_GRADES = 3;
 
-    public Course(int id, String name, Lecturer lecturer, List<Grade> grades) {
-        this.id = id;
-        this.name = name;
-        this.lecturer = lecturer;
-        this.grades = grades;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String name;
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id")
+    private Lecturer lecturer;
+    @OneToMany(mappedBy = "course") // TODO: ändert sich auch mit Dreieck student_semester_course
+    private List<Grade> grades;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Semester semester;
 
     public Course() {}
 
@@ -50,6 +54,14 @@ public class Course {
 
     public void setGrades(List<Grade> grades) {
         this.grades = grades;
+    }
+
+    public Semester getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Semester semester) {
+        this.semester = semester;
     }
 
     public boolean hasGrade() {

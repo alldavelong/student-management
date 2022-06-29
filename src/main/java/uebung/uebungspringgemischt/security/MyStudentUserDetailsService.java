@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import uebung.uebungspringgemischt.entity.Authority;
 import uebung.uebungspringgemischt.entity.Student;
 import uebung.uebungspringgemischt.persistence.StudentJsonDataService;
 
@@ -38,7 +39,7 @@ public class MyStudentUserDetailsService implements UserDetailsService {
                 user.getMatriculationNumber(),
                 "{bcrypt}" + new BCryptPasswordEncoder().encode(user.getPassword()),
                 // unsicheres Demo-Workaround für Plaintext-Passwörter !!!
-                user.getAuthorities().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                user.getAuthorities().stream().map(a -> new SimpleGrantedAuthority(a.getName())).collect(Collectors.toList())
         );
     }
 }
