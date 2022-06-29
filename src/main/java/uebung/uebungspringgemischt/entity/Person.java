@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+// see https://www.baeldung.com/hibernate-inheritance
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Person {
@@ -15,12 +16,6 @@ public abstract class Person {
     private String firstName;
     @Column(name = "l_name")
     private String lastName;
-
-    public Person(int id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 
     public Person() {}
 

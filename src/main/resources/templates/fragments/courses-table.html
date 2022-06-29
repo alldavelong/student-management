@@ -2,20 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-    <table th:fragment="courses-table(courses, semesterId)">
+    <table th:fragment="courses-table(semester)">
         <tr>
             <th>Name</th>
             <th>Lektor</th>
             <th>Noten</th>
         </tr>
-        <tr th:each="course: ${courses}">
-            <td th:text="${course.name}"></td>
-            <td th:text="${course.lecturer.fullName}"></td>
+        <tr th:each="course: ${semester.studentSemesterCourses}">
+            <td th:text="${course.course.name}"></td>
+            <td th:text="${course.course.lecturer.fullName}"></td>
             <td th:text="${#strings.listJoin(course.grades.![grade], ', ')}"></td> <!-- ! bedeutet 'projection' -->
             <td>
                 <form th:action="@{/grade}" method="post">
-                    <input type="hidden" name="student" th:value="${student.id}">
-                    <input type="hidden" name="semester" th:value="${semesterId}">
+                    <input type="hidden" name="semester" th:value="${semester.id}">
                     <input type="hidden" name="course" th:value="${course.id}">
                     <input type="number" name="grade" required>
                     <input type="submit" value="speichern">

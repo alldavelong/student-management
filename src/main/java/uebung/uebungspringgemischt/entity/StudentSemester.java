@@ -4,18 +4,21 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Course {
+public class StudentSemester {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
     @ManyToOne
-    @JoinColumn(name = "lecturer_id")
-    private Lecturer lecturer;
-    @OneToMany(mappedBy = "course")
+    @JoinColumn(name = "student_id")
+    private Student student;
+    @ManyToOne
+    @JoinColumn(name = "semester_id")
+    private Semester semester;
+    @OneToMany(mappedBy = "studentSemester")
     private List<StudentSemesterCourse> studentSemesterCourses;
 
-    public Course() {}
+    public StudentSemester() {
+    }
 
     public int getId() {
         return id;
@@ -25,20 +28,20 @@ public class Course {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
-    public Lecturer getLecturer() {
-        return lecturer;
+    public Semester getSemester() {
+        return semester;
     }
 
-    public void setLecturer(Lecturer lecturer) {
-        this.lecturer = lecturer;
+    public void setSemester(Semester semester) {
+        this.semester = semester;
     }
 
     public List<StudentSemesterCourse> getStudentSemesterCourses() {

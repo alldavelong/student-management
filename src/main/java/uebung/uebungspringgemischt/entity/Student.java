@@ -7,28 +7,18 @@ import java.util.Set;
 @Entity
 public class Student extends Person {
 
-    @Column(name = "matriculation_number")
     private String matriculationNumber; // PKZ
-
     private String password;
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER) // not supposed to be done like this (https://stackoverflow.com/questions/11746499/how-to-solve-the-failed-to-lazily-initialize-a-collection-of-role-hibernate-ex#:~:text=the%20problem%20and-,MISLEADING,-.%20To%20future%20readers)
     @JoinTable(
-            name = "student_authority",
+            name = "student_to_authority",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id")
     )
     private Set<Authority> authorities;
-
-    private String startYear; // Jahrgang
-
-    @ManyToMany
-    @JoinTable(
-            name = "student_semester",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "semester_id")
-    )
-    private List<Semester> semesters;
+    private String className;
+    @OneToMany(mappedBy = "student")
+    private List<StudentSemester> studentSemesters;
 
     public Student() {
         super();
@@ -58,20 +48,20 @@ public class Student extends Person {
         this.authorities = authorities;
     }
 
-    public String getStartYear() {
-        return startYear;
+    public String getClassName() {
+        return className;
     }
 
-    public void setStartYear(String startYear) {
-        this.startYear = startYear;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
-    public List<Semester> getSemesters() {
-        return semesters;
+    public List<StudentSemester> getStudentSemesters() {
+        return studentSemesters;
     }
 
-    public void setSemesters(List<Semester> semesters) {
-        this.semesters = semesters;
+    public void setStudentSemesters(List<StudentSemester> semesters) {
+        this.studentSemesters = semesters;
     }
 
 }
