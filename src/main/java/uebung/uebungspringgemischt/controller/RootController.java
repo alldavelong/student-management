@@ -33,9 +33,29 @@ public class RootController {
     @Autowired
     private GradeDAO gradeDAO;
 
-    @GetMapping(value = {"/", "/login"})
+    private boolean isUserAdmin(UserDetails user) {
+        return user.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    private Student retrieveStudent(UserDetails user) {
+        Optional<Student> optionalStudent = studentDAO.findByMatriculationNumber(user.getUsername());
+        if (optionalStudent.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return optionalStudent.get();
+    }
+
+    @GetMapping(value = { "/login"})
     public String login() {
         return "login";
+    }
+
+    @GetMapping("/")
+    public RedirectView redirectRoot(@AuthenticationPrincipal UserDetails user) {
+        if (isUserAdmin(user)) {
+            return new RedirectView("/admin");
+        }
+        return new RedirectView("/me");
     }
 
     @GetMapping("/admin")
@@ -48,14 +68,6 @@ public class RootController {
     public String getStudent(Model uiModel, @AuthenticationPrincipal UserDetails user) {
         uiModel.addAttribute("student", retrieveStudent(user));
         return "student";
-    }
-
-    private Student retrieveStudent(UserDetails user) {
-        Optional<Student> optionalStudent = studentDAO.findByMatriculationNumber(user.getUsername());
-        if (optionalStudent.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        return optionalStudent.get();
     }
 
     @GetMapping("/courses")
@@ -99,8 +111,7 @@ public class RootController {
                     "Hinzufügen nicht möglich. " + e.getMessage());
         }
 
-        boolean isAdmin = user.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"));
-        if (isAdmin) {
+        if (isUserAdmin(user)) {
             return new RedirectView("/admin");
         }
 
