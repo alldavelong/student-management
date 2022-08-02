@@ -10,7 +10,7 @@ public class Semester {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String season;
+    private String season; // SS (Sommersemester) / WS (Wintersemester)
     private int startYear;
     @OneToMany(mappedBy = "semester")
     private List<StudentSemester> students;

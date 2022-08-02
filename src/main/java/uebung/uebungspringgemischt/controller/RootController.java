@@ -10,16 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import uebung.uebungspringgemischt.entity.Grade;
-import uebung.uebungspringgemischt.entity.Student;
-import uebung.uebungspringgemischt.entity.StudentSemester;
-import uebung.uebungspringgemischt.entity.StudentSemesterCourse;
+import uebung.uebungspringgemischt.entity.*;
 import uebung.uebungspringgemischt.persistence.GradeDAO;
 import uebung.uebungspringgemischt.persistence.StudentDAO;
 import uebung.uebungspringgemischt.persistence.StudentSemesterCourseDAO;
 import uebung.uebungspringgemischt.persistence.StudentSemesterDAO;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -50,22 +46,30 @@ public class RootController {
 
     @GetMapping("/me")
     public String getStudent(Model uiModel, @AuthenticationPrincipal UserDetails user) {
+        uiModel.addAttribute("student", retrieveStudent(user));
+        return "student";
+    }
+
+    private Student retrieveStudent(UserDetails user) {
         Optional<Student> optionalStudent = studentDAO.findByMatriculationNumber(user.getUsername());
         if (optionalStudent.isEmpty()) {
             throw new IllegalArgumentException();
         }
-
-        uiModel.addAttribute("student", optionalStudent.get());
-        return "student";
+        return optionalStudent.get();
     }
 
     @GetMapping("/courses")
     public String getCourses(
-            @RequestParam(value = "studentSemester") int studentSemesterId,
+            @RequestParam(value = "semesterSeason") String semesterSeason,
+            @RequestParam(value = "semesterStartYear") int semesterStartYear,
             Model uiModel,
             @AuthenticationPrincipal UserDetails user
     ) {
-        Optional<StudentSemester> optionalStudentSemester = studentSemesterDAO.findById(studentSemesterId);
+
+        Optional<StudentSemester> optionalStudentSemester = studentSemesterDAO.findByStudentAndSemester(
+                retrieveStudent(user),
+                semesterSeason, semesterStartYear
+        );
         if (optionalStudentSemester.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -77,7 +81,6 @@ public class RootController {
     @PostMapping("/grade")
     public RedirectView setGrade(
             @RequestParam(value = "course") int courseId,
-            @RequestParam(value = "semester") int semesterId,
             @RequestParam(value = "grade") Integer grade,
             @AuthenticationPrincipal UserDetails user,
             RedirectAttributes redirectAttributes
@@ -101,6 +104,7 @@ public class RootController {
             return new RedirectView("/admin");
         }
 
-        return new RedirectView("/courses?studentSemester=" + semesterId);
+        Semester s = studentSemesterCourse.getStudentSemester().getSemester();
+        return new RedirectView("/courses?semesterSeason=" + s.getSeason() + "&semesterStartYear=" + s.getStartYear());
     }
 }
