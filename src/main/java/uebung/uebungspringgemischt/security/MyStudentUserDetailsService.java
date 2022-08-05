@@ -5,13 +5,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import uebung.uebungspringgemischt.entity.Student;
-import uebung.uebungspringgemischt.persistence.StudentDAO;
+import uebung.uebungspringgemischt.entity.User;
+import uebung.uebungspringgemischt.persistence.UserDAO;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,29 +16,21 @@ import java.util.stream.Collectors;
 public class MyStudentUserDetailsService implements UserDetailsService {
 
     @Autowired
-    StudentDAO studentDAO;
+    UserDAO userDAO;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.equals("admin")) {
-            return new org.springframework.security.core.userdetails.User(
-                    username,
-                    "{bcrypt}" + new BCryptPasswordEncoder().encode("admin"),
-                    new ArrayList<>(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")))
-                    );
-        }
 
-        Optional<Student> optionalStudent = studentDAO.findByMatriculationNumber(username);
-        if (optionalStudent.isEmpty()) {
+        Optional<User> optionalUser = userDAO.findByUsername(username);
+        if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
-        Student student = optionalStudent.get();
+        User user = optionalUser.get();
 
         return new org.springframework.security.core.userdetails.User(
-                student.getMatriculationNumber(),
-                "{bcrypt}" + new BCryptPasswordEncoder().encode(student.getPassword()),
-                // unsicheres Demo-Workaround für Plaintext-Passwörter !!!
-                student.getAuthorities().stream().map(a -> new SimpleGrantedAuthority(a.getName())).collect(Collectors.toList())
+                user.getUsername(),
+                user.getPasswordHash(),
+                user.getAuthorities().stream().map(a -> new SimpleGrantedAuthority(a.getName())).collect(Collectors.toList())
         );
     }
 }

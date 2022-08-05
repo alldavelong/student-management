@@ -6,11 +6,16 @@ VALUES ('Hans', 'Huber'), ('Maria', 'Müller'),
 
 INSERT INTO lecturer VALUES (3), (4);
 
-INSERT INTO student (person_id, matriculation_number, password, class_name)
-VALUES (1, '2010b', 'bbb', 'WEBvz20'),
-       (2, '2010a', 'aaa', 'WEBvz20');
+INSERT INTO student (person_id, matriculation_number, class_name)
+VALUES (1, '2010b', 'WEBvz20'),
+       (2, '2010a', 'WEBvz20');
 
-INSERT INTO student_to_authority (student_id, authority_id) VALUES (1, 2), (2, 2);
+INSERT INTO university_user (username, password_hash, student_id)
+VALUES ('hansi', '{bcrypt}$2a$10$h2IsgSouClQBT2tIObVu9eJ2/RB.H6Qb76UemjostIF5tTb4LSSfO', 1),
+       ('mary', '{bcrypt}$2a$10$9OzgegTiX4XvQ0b8sNuml.bdrfCuYIvMMj57uiTdC8TOgXx2ZGJbO', 2),
+       ('admin', '{bcrypt}$2a$10$nUq29qF9H4u0rmylKy/R7e3o2Knuqn8aNcGlXzzcdb1BU8pPi1jme', null);
+
+INSERT INTO user_to_authority (user_id, authority_id) VALUES (1,2), (2, 2), (3, 1);
 
 INSERT INTO course (name, lecturer_id)
 VALUES ('Mathematische Grundlagen der Informatik', 4), ('Wissenschaftliches Arbeiten', 3), ('Software Engineering', 3);

@@ -10,10 +10,7 @@ public class Authority {
     private int id;
     private String name;
     @ManyToMany(mappedBy = "authorities")
-    private Set<Student> students;
-
-    public Authority() {
-    }
+    private Set<User> users;
 
     public int getId() {
         return id;
@@ -31,11 +28,11 @@ public class Authority {
         this.name = name;
     }
 
-    public Set<Student> getStudents() {
-        return students;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setStudents(Set<Student> students) {
-        this.students = students;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

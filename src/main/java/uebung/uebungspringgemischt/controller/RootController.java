@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import uebung.uebungspringgemischt.entity.*;
-import uebung.uebungspringgemischt.persistence.GradeDAO;
-import uebung.uebungspringgemischt.persistence.StudentDAO;
-import uebung.uebungspringgemischt.persistence.StudentSemesterCourseDAO;
-import uebung.uebungspringgemischt.persistence.StudentSemesterDAO;
+import uebung.uebungspringgemischt.persistence.*;
 
 import java.util.Optional;
 
 @Controller
 public class RootController {
+
+    @Autowired
+    private UserDAO userDAO;
 
     @Autowired
     private StudentDAO studentDAO;
@@ -38,11 +38,11 @@ public class RootController {
     }
 
     private Student retrieveStudent(UserDetails user) {
-        Optional<Student> optionalStudent = studentDAO.findByMatriculationNumber(user.getUsername());
-        if (optionalStudent.isEmpty()) {
+        Optional<User> optionalUser = userDAO.findByUsername(user.getUsername());
+        if (optionalUser.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        return optionalStudent.get();
+        return optionalUser.get().getStudent();
     }
 
     @GetMapping(value = { "/login"})
